@@ -1,0 +1,51 @@
+[2026-11-14 16:23:41] Starting run_main_v2.py (Running FD001 & FD003, skipping existing)
+[2026-11-14 16:23:41] Skipping FD004 GRU_global seed 0 (already done and pred saved)
+[2026-11-14 16:23:41] Skipping FD004 GRU_cond seed 0 (already done and pred saved)
+[2026-11-14 16:23:41] Skipping FD004 GRU_global seed 1 (already done and pred saved)
+[2026-11-14 16:23:41] Skipping FD004 GRU_cond seed 1 (already done and pred saved)
+[2026-11-14 16:23:41] Skipping FD004 GRU_global seed 2 (already done and pred saved)
+[2026-11-14 16:23:41] Skipping FD004 GRU_cond seed 2 (already done and pred saved)
+[2026-11-14 16:23:41] Skipping FD002 GRU_global seed 0 (already done and pred saved)
+[2026-11-14 16:23:41] Skipping FD002 GRU_cond seed 0 (already done and pred saved)
+[2026-11-14 16:23:41] Skipping FD002 GRU_global seed 1 (already done and pred saved)
+[2026-11-14 16:23:41] Skipping FD002 GRU_cond seed 1 (already done and pred saved)
+[2026-11-14 16:23:41] Skipping FD002 GRU_global seed 2 (already done and pred saved)
+[2026-11-14 16:23:41] Skipping FD002 GRU_cond seed 2 (already done and pred saved)
+[2026-11-14 16:23:41] Running FD001 GRU_global seed 0...
+[2026-11-14 16:24:54] Done FD001 GRU_global seed 0: RMSE=16.07, NASA=501.2, Epochs=34 (73.4s)
+[2026-11-14 16:24:54] Running FD001 GRU_cond seed 0...
+[2026-11-14 16:26:18] Done FD001 GRU_cond seed 0: RMSE=16.07, NASA=501.2, Epochs=34 (83.6s)
+[2026-11-14 16:26:18] Running FD001 GRU_global seed 1...
+[2026-11-14 16:28:24] Done FD001 GRU_global seed 1: RMSE=15.60, NASA=366.7, Epochs=40 (125.9s)
+[2026-11-14 16:28:24] Running FD001 GRU_cond seed 1...
+[2026-11-14 16:30:24] Done FD001 GRU_cond seed 1: RMSE=15.60, NASA=366.7, Epochs=40 (119.7s)
+[2026-11-14 16:30:24] Running FD001 GRU_global seed 2...
+[2026-11-14 16:32:21] Done FD001 GRU_global seed 2: RMSE=16.14, NASA=523.6, Epochs=40 (117.9s)
+[2026-11-14 16:32:21] Running FD001 GRU_cond seed 2...
+[2026-11-14 16:34:18] Done FD001 GRU_cond seed 2: RMSE=16.14, NASA=523.6, Epochs=40 (116.7s)
+[2026-11-14 16:34:18] Running FD003 GRU_global seed 0...
+[2026-11-14 16:35:08] Done FD003 GRU_global seed 0: RMSE=21.05, NASA=1621.0, Epochs=15 (50.0s)
+[2026-11-14 16:35:08] Running FD003 GRU_cond seed 0...
+[2026-11-14 16:35:58] Done FD003 GRU_cond seed 0: RMSE=21.05, NASA=1621.0, Epochs=15 (50.0s)
+[2026-11-14 16:35:58] Running FD003 GRU_global seed 1...
+[2026-11-14 16:36:42] Done FD003 GRU_global seed 1: RMSE=20.94, NASA=1515.4, Epochs=13 (43.4s)
+[2026-11-14 16:36:42] Running FD003 GRU_cond seed 1...
+[2026-11-14 16:37:27] Done FD003 GRU_cond seed 1: RMSE=20.94, NASA=1515.3, Epochs=13 (44.9s)
+[2026-11-14 16:37:27] Running FD003 GRU_global seed 2...
+[2026-11-14 16:40:08] Done FD003 GRU_global seed 2: RMSE=15.99, NASA=606.7, Epochs=40 (160.9s)
+[2026-11-14 16:40:08] Running FD003 GRU_cond seed 2...
+[2026-11-14 16:42:48] Done FD003 GRU_cond seed 2: RMSE=15.99, NASA=606.7, Epochs=40 (160.8s)
+
+[2026-11-14 16:42:48] run_main_v2.py COMPLETED ALL RUNS!
+
+                    rmse       nasa_score         
+                    mean   std       mean      std
+subset method                                     
+FD001  GRU_cond    15.94  0.29     463.84    84.90
+       GRU_global  15.94  0.29     463.83    84.90
+FD002  GRU_cond    27.07  0.63    8573.42  1276.20
+       GRU_global  28.98  1.23   18033.33  6705.27
+FD003  GRU_cond    19.33  2.89    1247.66   557.63
+       GRU_global  19.33  2.89    1247.70   557.66
+FD004  GRU_cond    26.79  0.68    4950.50   403.85
+       GRU_global  31.13  1.15    9214.63  1550.77

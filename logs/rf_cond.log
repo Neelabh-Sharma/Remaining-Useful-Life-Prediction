@@ -1,0 +1,18 @@
+FD004 seed 1 k=6 RMSE=30.43 NASA=7675.5 (219s)
+FD004 seed 2 k=6 RMSE=30.28 NASA=7673.2 (223s)
+FD002 seed 0 k=6 RMSE=29.84 NASA=13425.4 (217s)
+FD002 seed 1 k=6 RMSE=30.02 NASA=13744.3 (217s)
+FD002 seed 2 k=6 RMSE=29.93 NASA=14085.2 (199s)
+FD001 seed 0 k=1 RMSE=18.33 NASA=872.8 (1728s)
+FD001 seed 1 k=1 RMSE=18.49 NASA=941.0 (38s)
+FD001 seed 2 k=1 RMSE=18.60 NASA=823.6 (43s)
+FD003 seed 0 k=1 RMSE=19.46 NASA=1507.5 (51s)
+FD003 seed 1 k=1 RMSE=19.91 NASA=1559.8 (46s)
+FD003 seed 2 k=1 RMSE=19.45 NASA=1435.8 (49s)
+             rmse              nasa_score            
+             mean       std          mean         std
+subset                                               
+FD001   18.475321  0.134308    879.171817   58.958659
+FD002   29.929704  0.090570  13751.633011  329.967203
+FD003   19.604508  0.260991   1501.062883   62.234911
+FD004   30.322706  0.094898   7593.828247  139.511325

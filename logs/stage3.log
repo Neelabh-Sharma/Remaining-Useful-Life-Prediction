@@ -1,0 +1,135 @@
+Windows sleep prevention activated (SetThreadExecutionState).
+Loaded existing GRU_cond seed 0 for FD004 (RMSE=26.33, NASA=4711.7)
+Loaded existing GRU_cond seed 1 for FD004 (RMSE=26.48, NASA=4723.0)
+Loaded existing GRU_cond seed 2 for FD004 (RMSE=27.57, NASA=5416.8)
+Loaded existing GRU_cond seed 0 for FD002 (RMSE=26.75, NASA=7721.6)
+Loaded existing GRU_cond seed 1 for FD002 (RMSE=27.80, NASA=10040.7)
+Loaded existing GRU_cond seed 2 for FD002 (RMSE=26.67, NASA=7957.9)
+
+[2026-11-19 13:58:37] Starting STAGE 3 Runs (Total planned tasks: 34)...
+
+[2026-11-19 13:58:37] Running FD004 GRU_cond (hidden=64, seed=3)...
+C:\Users\lenovo\AppData\Roaming\Python\Python313\site-packages\joblib\externals\loky\backend\context.py:131: UserWarning: Could not find the number of physical cores for the following reason:
+[WinError 2] The system cannot find the file specified
+Returning the number of logical cores instead. You can silence this warning by setting LOKY_MAX_CPU_COUNT to the number of cores you want to use.
+  warnings.warn(
+  File "C:\Users\lenovo\AppData\Roaming\Python\Python313\site-packages\joblib\externals\loky\backend\context.py", line 247, in _count_physical_cores
+    cpu_count_physical = _count_physical_cores_win32()
+  File "C:\Users\lenovo\AppData\Roaming\Python\Python313\site-packages\joblib\externals\loky\backend\context.py", line 299, in _count_physical_cores_win32
+    cpu_info = subprocess.run(
+        "wmic CPU Get NumberOfCores /Format:csv".split(),
+        capture_output=True,
+        text=True,
+    )
+  File "C:\Python313\Lib\subprocess.py", line 554, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\subprocess.py", line 1036, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\subprocess.py", line 1548, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^
+                             # no special security
+                             ^^^^^^^^^^^^^^^^^^^^^
+    ...<4 lines>...
+                             cwd,
+                             ^^^^
+                             startupinfo)
+                             ^^^^^^^^^^^^
+[2026-11-19 14:02:54] Finished FD004 GRU_cond h=64 seed 3: RMSE=26.4294, NASA=4656.6, Epochs=40 (256.2s)
+
+[2026-11-19 14:02:54] Running FD004 GRU_cond (hidden=64, seed=4)...
+[2026-11-19 14:06:35] Finished FD004 GRU_cond h=64 seed 4: RMSE=26.3606, NASA=4703.3, Epochs=38 (220.2s)
+
+[2026-11-19 14:06:35] Running FD004 GRU_cond (hidden=64, seed=5)...
+[2026-11-19 14:10:49] Finished FD004 GRU_cond h=64 seed 5: RMSE=25.9140, NASA=4333.4, Epochs=40 (252.5s)
+
+[2026-11-19 14:10:49] Running FD004 GRU_cond (hidden=64, seed=6)...
+[2026-11-19 14:15:10] Finished FD004 GRU_cond h=64 seed 6: RMSE=26.9017, NASA=4885.5, Epochs=40 (258.9s)
+
+[2026-11-19 14:15:10] Running FD004 GRU_cond (hidden=64, seed=7)...
+[2026-11-19 14:19:22] Finished FD004 GRU_cond h=64 seed 7: RMSE=26.3224, NASA=4836.1, Epochs=40 (251.1s)
+
+[2026-11-19 14:19:22] Running FD004 GRU_cond (hidden=64, seed=8)...
+[2026-11-19 14:23:41] Finished FD004 GRU_cond h=64 seed 8: RMSE=26.6483, NASA=4830.2, Epochs=40 (257.0s)
+
+[2026-11-19 14:23:41] Running FD004 GRU_cond (hidden=64, seed=9)...
+[2026-11-19 14:26:57] Finished FD004 GRU_cond h=64 seed 9: RMSE=27.1996, NASA=5205.8, Epochs=31 (195.4s)
+
+[2026-11-19 14:26:57] Running FD002 GRU_cond (hidden=64, seed=3)...
+[2026-11-19 14:29:48] Finished FD002 GRU_cond h=64 seed 3: RMSE=26.9557, NASA=7983.2, Epochs=31 (169.7s)
+
+[2026-11-19 14:29:48] Running FD002 GRU_cond (hidden=64, seed=4)...
+[2026-11-19 14:33:35] Finished FD002 GRU_cond h=64 seed 4: RMSE=26.3894, NASA=6921.3, Epochs=37 (225.4s)
+
+[2026-11-19 14:33:35] Running FD002 GRU_cond (hidden=64, seed=5)...
+[2026-11-19 14:37:03] Finished FD002 GRU_cond h=64 seed 5: RMSE=26.9539, NASA=8718.7, Epochs=35 (206.2s)
+
+[2026-11-19 14:37:03] Running FD002 GRU_cond (hidden=64, seed=6)...
+[2026-11-19 14:39:36] Finished FD002 GRU_cond h=64 seed 6: RMSE=27.2753, NASA=9253.3, Epochs=26 (152.4s)
+
+[2026-11-19 14:39:36] Running FD002 GRU_cond (hidden=64, seed=7)...
+[2026-11-19 14:42:51] Finished FD002 GRU_cond h=64 seed 7: RMSE=25.8152, NASA=6649.6, Epochs=32 (193.7s)
+
+[2026-11-19 14:42:51] Running FD002 GRU_cond (hidden=64, seed=8)...
+[2026-11-19 14:45:52] Finished FD002 GRU_cond h=64 seed 8: RMSE=26.8462, NASA=8469.1, Epochs=32 (180.0s)
+
+[2026-11-19 14:45:52] Running FD002 GRU_cond (hidden=64, seed=9)...
+[2026-11-19 14:48:42] Finished FD002 GRU_cond h=64 seed 9: RMSE=26.8102, NASA=7886.0, Epochs=30 (167.8s)
+
+[2026-11-19 14:48:42] Running FD004 GRU_global (hidden=128, seed=0)...
+[2026-11-19 14:56:54] Finished FD004 GRU_global h=128 seed 0: RMSE=29.9784, NASA=7931.5, Epochs=40 (489.1s)
+
+[2026-11-19 14:56:54] Running FD004 GRU_global (hidden=128, seed=1)...
+[2026-11-19 15:04:45] Finished FD004 GRU_global h=128 seed 1: RMSE=30.3614, NASA=8075.9, Epochs=40 (468.0s)
+
+[2026-11-19 15:04:45] Running FD004 GRU_global (hidden=128, seed=2)...
+[2026-11-19 15:14:40] Finished FD004 GRU_global h=128 seed 2: RMSE=31.1490, NASA=9303.5, Epochs=40 (591.4s)
+
+[2026-11-19 15:14:40] Running FD004 GRU_global (hidden=128, seed=3)...
+Resuming Stage 3 training runs...
+Windows sleep prevention activated (SetThreadExecutionState).
+
+[2026-11-19 15:26:35] Starting STAGE 3 Runs (Total planned tasks: 34)...
+[2026-11-19 15:26:35] Skipping FD004 GRU_cond h=64 seed 3 (already done).
+[2026-11-19 15:26:35] Skipping FD004 GRU_cond h=64 seed 4 (already done).
+[2026-11-19 15:26:35] Skipping FD004 GRU_cond h=64 seed 5 (already done).
+[2026-11-19 15:26:35] Skipping FD004 GRU_cond h=64 seed 6 (already done).
+[2026-11-19 15:26:35] Skipping FD004 GRU_cond h=64 seed 7 (already done).
+[2026-11-19 15:26:35] Skipping FD004 GRU_cond h=64 seed 8 (already done).
+[2026-11-19 15:26:35] Skipping FD004 GRU_cond h=64 seed 9 (already done).
+[2026-11-19 15:26:35] Skipping FD002 GRU_cond h=64 seed 3 (already done).
+[2026-11-19 15:26:35] Skipping FD002 GRU_cond h=64 seed 4 (already done).
+[2026-11-19 15:26:35] Skipping FD002 GRU_cond h=64 seed 5 (already done).
+[2026-11-19 15:26:35] Skipping FD002 GRU_cond h=64 seed 6 (already done).
+[2026-11-19 15:26:35] Skipping FD002 GRU_cond h=64 seed 7 (already done).
+[2026-11-19 15:26:35] Skipping FD002 GRU_cond h=64 seed 8 (already done).
+[2026-11-19 15:26:35] Skipping FD002 GRU_cond h=64 seed 9 (already done).
+[2026-11-19 15:26:35] Skipping FD004 GRU_global h=128 seed 0 (already done).
+[2026-11-19 15:26:35] Skipping FD004 GRU_global h=128 seed 1 (already done).
+[2026-11-19 15:26:35] Skipping FD004 GRU_global h=128 seed 2 (already done).
+
+[2026-11-19 15:26:35] Running FD004 GRU_global (hidden=128, seed=3)...
+[2026-11-19 16:34:26] Finished FD004 GRU_global h=128 seed 3: RMSE=30.3972, NASA=8512.9, Epochs=40 (4068.0s)
+
+[2026-11-19 16:34:26] Running FD004 GRU_global (hidden=128, seed=4)...
+[2026-11-19 16:41:30] Finished FD004 GRU_global h=128 seed 4: RMSE=30.5751, NASA=9406.9, Epochs=40 (421.6s)
+
+[2026-11-19 16:41:30] Running FD004 GRU_global (hidden=128, seed=5)...
+[2026-11-19 21:08:14] Finished FD004 GRU_global h=128 seed 5: RMSE=31.3390, NASA=9032.2, Epochs=40 (16001.6s)
+
+[2026-11-19 21:08:14] Running FD004 GRU_global (hidden=128, seed=6)...
+[2026-11-19 21:15:29] Finished FD004 GRU_global h=128 seed 6: RMSE=29.8772, NASA=8018.2, Epochs=40 (431.6s)
+
+[2026-11-19 21:15:29] Running FD004 GRU_global (hidden=128, seed=7)...
+[2026-11-19 21:25:47] Finished FD004 GRU_global h=128 seed 7: RMSE=31.3247, NASA=8810.0, Epochs=40 (614.4s)
+
+[2026-11-19 21:25:47] Running FD004 GRU_global (hidden=128, seed=8)...

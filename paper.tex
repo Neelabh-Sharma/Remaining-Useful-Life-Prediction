@@ -1,0 +1,326 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{microtype}
+
+\begin{document}
+
+\title{Per-Regime Sensor Normalization for Remaining Useful Life Prediction under Label Scarcity and Test-Protocol Variation: An Empirical Study on C-MAPSS}
+
+\author{\IEEEauthorblockN{Anonymous Authors}
+\IEEEauthorblockA{\textit{Empirical Prognostics Research Group}}
+}
+
+\maketitle
+
+\begin{abstract}
+Predicting the Remaining Useful Life (RUL) of complex aero-propulsion machinery is critical for operational safety and maintenance scheduling. On the benchmark NASA C-MAPSS dataset, operating condition normalization is widely acknowledged as essential for multi-regime turbofan engines (FD002 and FD004), yet it is frequently treated as an informal preprocessing detail rather than an isolated, systematic intervention. This paper presents a rigorous empirical study examining per-regime sensor normalization under operating regime clustering, label scarcity, and test ground-truth clipping variations. Using an unsupervised $K$-Means clustering protocol ($k=6$) fit solely on training operating settings without failure labels, we demonstrate that per-regime standard normalization yields statistically significant error reductions over global normalization on multi-regime units (FD002: $-6.6\%$ GRU test RMSE reduction, $27.07$ vs. $28.98$; FD004: $-13.9\%$, $26.79$ vs. $31.13$). Crucially, under severe label scarcity on FD004, a condition-aware GRU trained with only $25\%$ of labeled run-to-failure engines achieves a test RMSE of $30.90$, comparable to a globally normalized model utilizing $100\%$ of labeled engines ($31.13$). Error breakdown across degradation stages reveals that gains are largest in critical near-failure cycles. Furthermore, we clarify test-protocol discrepancies regarding ground-truth RUL clipping, showing that post-hoc metric changes alter nominal RMSE by over $10$ cycles without altering model performance.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Remaining useful life, prognostics and health management, C-MAPSS, sensor normalization, operating regimes, label scarcity, reproducibility.
+\end{IEEEkeywords}
+
+\section{Introduction}
+Prognostics and Health Management (PHM) for aircraft gas turbine engines seeks to anticipate mechanical failures by estimating Remaining Useful Life (RUL) from multivariate run-to-failure telemetry~\cite{saxena2008cmapss}. In modern aviation systems, turbofan engines operate across highly dynamic flight envelopes, transitioning across wide altitudes, Mach numbers, and throttle resolver angles. These distinct operational regimes induce dramatic shifts in baseline sensor measurements---such as total temperatures, core speeds, and bypass pressures---that often exceed the gradual sensor drift attributable to physical component degradation.
+
+When evaluating deep neural architectures on the widely adopted Commercial Modular Aero-Propulsion System Simulation (C-MAPSS) benchmark~\cite{saxena2008cmapss} [CITE: C-MAPSS user guide], normalizing sensor telemetry globally across fluctuating operational regimes conflates operational shifts with degradation signatures. Per-regime sensor normalization is a known technique in prior prognostic literature~\cite{pasa2019, gupta2024auditing}. However, it is rarely subjected to isolated, controlled benchmarking across operational subsets, varying label budgets, and differing test evaluation protocols. To the best of our searches, no controlled study has systematically quantified the isolated contribution of per-regime normalization under severe label scarcity and across prevailing test-RUL clipping discrepancies.
+
+In industrial deployments, obtaining complete run-to-failure trajectories with ground-truth degradation labels is economically and operationally prohibitive. While unlabeled operational telemetry is abundant, engines run to critical failure are rare. Understanding whether unsupervised regime normalization can substitute for scarce failure labels is therefore of primary engineering importance.
+
+This empirical study provides three primary contributions:
+\begin{enumerate}
+    \item \textbf{Controlled Benchmark and Significance:} We quantify the isolated impact of per-regime $K$-Means sensor normalization across all four C-MAPSS subsets (FD001--FD004) under identical GRU, Random Forest, and Ridge regression models. Condition-aware normalization reduces test RMSE on multi-regime FD002 by $-6.6\%$ ($27.07$ vs. $28.98$) and on FD004 by $-13.9\%$ ($26.79$ vs. $31.13$). Paired hypothesis testing and $10{,}000$-sample bootstrap confidence intervals confirm statistical significance.
+    \item \textbf{Label-Efficiency Equivalence:} We evaluate label scarcity by training on $10\%$, $25\%$, $50\%$, and $100\%$ of training engines. On FD004, a condition-aware GRU using only $25\%$ labeled engines achieves an RMSE of $30.90$, matching a globally normalized model requiring $100\%$ labeled trajectories ($31.13$), demonstrating that regime normalization effectively offsets a $4\times$ deficit in failure labels.
+    \item \textbf{Disentangling Test Protocol Variations:} We reconcile widespread discrepancies in reported C-MAPSS benchmarks, demonstrating that evaluating test ground truth under unclipped (Protocol A) versus $125$-cycle clipped (Protocol B) regimes alters nominal RMSE by $11$ to $12$ cycles on multi-regime sets without representing any genuine algorithmic improvement.
+\end{enumerate}
+
+\section{Related Work}
+\subsection{Deep Learning on C-MAPSS}
+Since the release of the C-MAPSS benchmark~\cite{saxena2008cmapss}, data-driven prognostics has evolved from classical regression and multilayer perceptrons [CITE: RNN RUL Heimes 2008] to recurrent neural networks [CITE: LSTM RUL Zheng 2017, GRU Cho 2014], temporal convolutional networks [CITE: TCN RUL], and spatio-temporal attention graph neural networks~\cite{stagnn2024}. Despite substantial architectural innovations, baseline preprocessing and evaluation protocols vary widely across published works [CITE: Ramasso Saxena 2014 benchmarking], \cite{gupta2024auditing}.
+
+\subsection{Operating Condition Normalization}
+The presence of distinct operating regimes in subsets FD002 and FD004 has motivated various normalization schemes. Pasa et al.~\cite{pasa2019} standardized sensors conditionally based on flight conditions. Recently, Gupta~\cite{gupta2024auditing} audited operating-condition normalization practices, noting that architectural comparisons often inadvertently contrast condition-normalized models against globally normalized baselines. In this study, we frame per-regime normalization strictly as established prior art and isolate its exact quantitative utility.
+
+\subsection{Label Scarcity and Semi-Supervised Prognostics}
+Acquiring ground-truth RUL targets requires running machinery to functional failure, which is actively avoided in aviation fleet management. Semi-supervised learning [CITE: semi-supervised PHM], contrastive pretraining [CITE: contrastive RUL], and domain adaptation [CITE: transfer learning RUL] have been investigated to alleviate label demands. Unsupervised regime clustering leverages raw operating settings from all engines without requiring failure annotations.
+
+\subsection{Target Clipping and Test Protocol Divergence}
+The piecewise linear degradation model introduced in early benchmarks [CITE: piecewise linear RUL Heimes 2008] caps training RUL at an upper threshold (typically $125$ cycles) to reflect initial healthy operation. However, authors differ on whether the ground-truth test labels are also capped at $125$ cycles during final scoring [CITE: Ramasso Saxena 2014 benchmarking], \cite{gupta2024auditing}. This protocol variation creates substantial confusion when comparing published numbers across literature.
+
+\section{Dataset and Evaluation Protocols}
+
+\subsection{NASA C-MAPSS Subsets}
+The C-MAPSS benchmark comprises four distinct subsets simulated under varying operating conditions and fault modes (Table~\ref{tab:subsets}). Each cycle records three operating settings and 21 telemetry sensors.
+\begin{itemize}
+    \item \textbf{FD001:} Single operating condition (Sea Level), single fault mode (HPC degradation).
+    \item \textbf{FD002:} Six operating regimes, single fault mode (HPC degradation).
+    \item \textbf{FD003:} Single operating condition, two fault modes (HPC and Fan degradation).
+    \item \textbf{FD004:} Six operating regimes, two fault modes (HPC and Fan degradation).
+\end{itemize}
+
+\begin{table}[t]
+\caption{Characteristics of C-MAPSS Subsets.}
+\label{tab:subsets}
+\centering
+\begin{tabular}{lcccc}
+\toprule
+Subset & Conditions & Fault Modes & Train Engines & Test Engines \\
+\midrule
+FD001 & 1 & 1 & 100 & 100 \\
+FD002 & 6 & 1 & 260 & 259 \\
+FD003 & 1 & 2 & 100 & 100 \\
+FD004 & 6 & 2 & 249 & 248 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Dataset Integrity and Rejected Mirrors}
+We observed that third-party repository mirrors (notably popular Hugging Face datasets copies) corrupt C-MAPSS evaluation by omitting test ground-truth labels, concatenating subsets without metadata, and introducing colliding engine unit numbers. All experiments in this work are derived directly from the original NASA repository distribution files.
+
+\subsection{Evaluation Metrics and Test Protocols}
+Evaluation is conducted on the final sliding window of each test engine. We examine two distinct test protocols:
+\begin{itemize}
+    \item \textbf{Protocol A (Standard Evaluation):} Predictions are scored against the true, unclipped test ground-truth RUL values provided in the original benchmark files.
+    \item \textbf{Protocol B (Clipped Ground Truth):} Test ground truth is post-hoc clipped at $125$ cycles ($\min(y_{\text{true}}, 125)$), identical to the training target cap.
+\end{itemize}
+
+Performance is evaluated using Root Mean Squared Error (RMSE) and the asymmetric NASA PHM 2008 Challenge score~\cite{saxena2008cmapss}:
+\begin{equation}
+S = \sum_{i=1}^N h(d_i), \quad h(d_i) = \begin{cases} e^{-d_i/13} - 1, & d_i < 0 \\ e^{d_i/10} - 1, & d_i \ge 0 \end{cases}
+\end{equation}
+where $d_i = \hat{y}_i - y_i$. The NASA score penalizes late predictions ($\hat{y}_i > y_i$) more heavily than early predictions.
+
+\section{Methodology}
+
+\subsection{Unsupervised Operating Regime Clustering}
+In multi-condition subsets FD002 and FD004, the three operating settings ($\text{setting\_1}$, $\text{setting\_2}$, $\text{setting\_3}$) govern engine altitude, flight velocity, and power demand. We cluster operating settings using $K$-Means clustering with $k=6$ clusters, initialized with $10$ restarts ($\text{random\_state}=0$). Crucially, clustering is fit strictly on the training operating settings across all training engines without failure labels. Test operating settings are assigned to nearest cluster centroids.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\columnwidth]{figures/k_selection.pdf}
+\caption{Silhouette score and inertia across cluster count $k=2 \dots 12$ on FD002 and FD004 training operating settings. Both datasets exhibit an acute silhouette peak at $k=6$ ($>0.9996$) and an inertia reduction of six orders of magnitude.}
+\label{fig:k_selection}
+\end{figure}
+
+Fig.~\ref{fig:k_selection} illustrates the unsupervised cluster selection metric across $k \in [2, 12]$. Silhouette scores peak decisively at $k=6$ ($0.999659$ on FD002, $0.999660$ on FD004) with an inertia elbow dropping from $2.8 \times 10^5$ ($k=5$) to $0.47$ ($k=6$). This confirms that $K$-Means successfully recovers the six discrete physical flight regimes present in C-MAPSS simulation logs.
+
+\subsection{Normalization Modes and the Epsilon Rule}
+We compare two principal normalization configurations:
+\begin{itemize}
+    \item \textbf{Global Normalization (Mode G):} A single $\text{StandardScaler}$ computes global mean $\mu_j$ and standard deviation $\sigma_j$ for each sensor across all cycles.
+    \item \textbf{Per-Regime Normalization (Mode C):} For each discovered regime $c \in \{1, \dots, k\}$, a cluster-specific mean $\mu_{j,c}$ and standard deviation $\sigma_{j,c}$ are computed. For single-condition subsets (FD001, FD003), $k=1$, rendering Mode C mathematically equivalent to Mode G.
+\end{itemize}
+
+To prevent numerical instability and preserve sensor validity, we enforce the following strict epsilon rule:
+\begin{enumerate}
+    \item Sensors with global training standard deviation below $10^{-10}$ exhibit zero variance across the fleet and are permanently dropped.
+    \item Within any individual cluster $c$, if a sensor's standard deviation $\sigma_{j,c}$ is below $10^{-10}$ or NaN, it is replaced with $1.0$, centering the sensor about its cluster mean $\mu_{j,c}$ without scaling amplification.
+\end{enumerate}
+
+\section{Experimental Setup}
+
+\subsection{Model Architecture and Hyperparameters}
+Experiments focus on a 2-layer Gated Recurrent Unit (GRU) network [CITE: GRU Cho 2014] with dropout $0.2$, processing sequences of $30$ historical cycles with stride $5$. Training minimizes Mean Squared Error with targets scaled to $[0, 1]$ via $y / 125.0$. Model parameters are optimized using Adam ($lr = 2\times 10^{-3}$) with gradient clipping at $1.0$, a batch size of $512$, and $\text{ReduceLROnPlateau}$ (patience 3, factor 0.5) over a maximum of $40$ epochs. Early stopping terminates training if validation loss fails to improve for $8$ consecutive epochs. All evaluations utilize batch evaluation ($2048$ windows) to prevent memory allocation spikes.
+
+\subsection{Engine-Level Validation Split and Tuning Constraint}
+To prevent data leakage across temporal windows, a strict $20\%$ holdout split is applied at the engine unit level. Hyperparameter tuning was restricted entirely to the validation set of FD004 across seeds 0 and 1 under a pre-specified rule: retain default Config A unless an alternative improves validation RMSE by more than $2\%$. While hidden dimension $h=128$ improved validation RMSE by $3.66\%$ on global normalization, it improved condition-aware validation RMSE by only $1.07\%$ (failing the $2\%$ threshold) and degraded condition-aware test RMSE. Thus, the baseline architecture ($h=64$) was retained as the controlled benchmark standard.
+
+\subsection{Execution Environment}
+All models were executed on multi-threaded CPU environments ($\text{torch.set\_num\_threads}$) with Windows execution state protection to eliminate sleep-induced timing anomalies. Full random seeds ($0, 1, 2$) govern model weight initialization and engine partition splits.
+
+\section{Experimental Results}
+
+\begin{table*}[t]
+\caption{Main Benchmark Results across NASA C-MAPSS Subsets (Protocol A, Unclipped Test Ground Truth). Values reported as mean $\pm$ standard deviation across seeds 0, 1, 2.}
+\label{tab:main_results}
+\centering
+\begin{tabular}{llcccccc}
+\toprule
+Subset & Metric & Ridge (Global)$^\dagger$ & RF (Global) & RF (Cond-Aware) & GRU (Global) & GRU (Cond-Aware) & $\Delta$ GRU RMSE \\
+\midrule
+\multirow{2}{*}{\textbf{FD001}} & RMSE & 18.24 & $18.49 \pm 0.13$ & $18.48 \pm 0.13$ & $15.94 \pm 0.29$ & $15.94 \pm 0.29$ & $0.0\%$ \\
+ & NASA & 537.3 & $878.4 \pm 54.4$ & $879.2 \pm 59.0$ & $463.8 \pm 84.9$ & $463.8 \pm 84.9$ & --- \\
+\midrule
+\multirow{2}{*}{\textbf{FD002}} & RMSE & 29.20 & $30.89 \pm 0.05$ & $29.93 \pm 0.09$ & $28.98 \pm 1.23$ & $\mathbf{27.07 \pm 0.63}$ & $\mathbf{-6.6\%}$ \\
+ & NASA & 12905.2 & $14547.0 \pm 743.8$ & $13751.6 \pm 330.0$ & $18033.3 \pm 6705.3$ & $\mathbf{8573.4 \pm 1276.2}$ & --- \\
+\midrule
+\multirow{2}{*}{\textbf{FD003}} & RMSE & 18.77 & $19.61 \pm 0.23$ & $19.60 \pm 0.26$ & $19.33 \pm 2.89$ & $19.33 \pm 2.89$ & $0.0\%$ \\
+ & NASA & 651.5 & $1507.4 \pm 56.7$ & $1501.1 \pm 62.2$ & $1247.7 \pm 557.7$ & $1247.7 \pm 557.6$ & --- \\
+\midrule
+\multirow{2}{*}{\textbf{FD004}} & RMSE & 31.51 & $32.04 \pm 0.15$ & $30.32 \pm 0.09$ & $31.13 \pm 1.15$ & $\mathbf{26.79 \pm 0.68}$ & $\mathbf{-13.9\%}$ \\
+ & NASA & 8652.6 & $9008.6 \pm 230.9$ & $7593.8 \pm 139.5$ & $9214.6 \pm 1550.8$ & $\mathbf{4950.5 \pm 403.8}$ & --- \\
+\bottomrule
+\end{tabular}
+\begin{flushleft}
+\footnotesize $^\dagger$Ridge regression is deterministic with no seed variance. On single-condition sets (FD001, FD003), $k=1$, making Mode C and Mode G mathematically identical; trivial differences at the 6th decimal place arise from CPU thread execution order. Negative percentages denote error reduction.
+\end{flushleft}
+\end{table*}
+
+\subsection{Main Benchmark Performance}
+Table~\ref{tab:main_results} reports test performance across all four subsets under Protocol A. On single-condition controls (FD001 and FD003), condition-aware normalization sets $k=1$ and reproduces global results exactly ($15.94$ on FD001; $19.33$ on FD003).
+
+On multi-regime subsets, per-regime normalization yields substantial, consistent error reductions:
+\begin{itemize}
+    \item On \textbf{FD002}, GRU RMSE drops from $28.98 \pm 1.23$ to $27.07 \pm 0.63$ ($-6.6\%$), while the NASA score is halved from $18033.3$ to $8573.4$.
+    \item On \textbf{FD004}, GRU RMSE drops from $31.13 \pm 1.15$ to $26.79 \pm 0.68$ ($-13.9\%$), and the NASA score decreases from $9214.6$ to $4950.5$.
+\end{itemize}
+
+An intriguing interaction emerges when comparing classical Random Forest baselines against deep networks: on FD004, a Random Forest with condition-aware normalization ($30.32 \pm 0.09$) outperforms a globally normalized GRU ($31.13 \pm 1.15$). However, this cross-model inversion does not hold on FD002 (RF cond: $29.93$; GRU global: $28.98$), demonstrating that sensor regime alignment can occasionally compensate for architectural capacity, but depends on the underlying degradation dynamics.
+
+\subsection{Statistical Significance Testing}
+To verify that observed improvements are not artifacts of seed selection or small test partitions, we conducted paired significance testing and bootstrap confidence estimation:
+\begin{itemize}
+    \item \textbf{Seed-level paired $t$-test ($n=3$):} On FD004, $t = -12.663$, $p = 0.00618$. On FD002, $t = -2.544$, $p = 0.1259$ (statistical power is constrained at $n=3$).
+    \item \textbf{Engine-level paired tests on squared errors:} Predictions from all three seeds were averaged per engine ($p_{\text{avg}}$). Paired $t$-tests on $(p_{\text{avg}} - y_{\text{true}})^2$ yield $t = -2.720$, $p = 0.00697$ on FD002 ($N=259$), and $t = -5.936$, $p = 9.82 \times 10^{-9}$ on FD004 ($N=248$). Wilcoxon signed-rank tests confirm significant reductions ($p = 0.00374$ on FD002; $p = 3.50 \times 10^{-9}$ on FD004). Applying Holm-Bonferroni correction across both subsets preserves significance ($p_{\text{adj}} = 0.00697$ on FD002; $p_{\text{adj}} = 1.96 \times 10^{-8}$ on FD004).
+    \item \textbf{Paired bootstrap ($10{,}000$ resamples):} Resampling test engines with replacement on seed-averaged predictions yields a $95\%$ confidence interval for the RMSE difference ($\Delta\text{RMSE} = \text{RMSE}_{\text{cond}} - \text{RMSE}_{\text{global}}$) of $[-2.80, -0.56]$ cycles for FD002 (observed $\Delta = -1.66$) and $[-5.65, -3.03]$ cycles for FD004 (observed $\Delta = -4.27$). Both confidence intervals strictly exclude zero. Note that this engine bootstrap is conditional on the trained models and does not capture training run variance.
+\end{itemize}
+
+\subsection{Label Scarcity Evaluation}
+Fig.~\ref{fig:label_efficiency} and Table~\ref{tab:label_efficiency} present model performance when training labels are restricted to $10\%$, $25\%$, $50\%$, and $100\%$ of available training engines on FD004. Condition-aware normalization provides an error reduction of $12.6\%$ to $16.3\%$ across every label fraction.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\columnwidth]{figures/label_efficiency_curve.pdf}
+\caption{Label efficiency curve on FD004. GRU with condition-aware normalization trained on $25\%$ of labeled engines ($30.90 \pm 0.33$) matches the accuracy of a globally normalized GRU trained on $100\%$ of engines ($31.13 \pm 1.15$).}
+\label{fig:label_efficiency}
+\end{figure}
+
+\begin{table}[t]
+\caption{Label Scarcity Benchmark on Multi-Regime FD004.}
+\label{tab:label_efficiency}
+\centering
+\begin{tabular}{lccc}
+\toprule
+Labeled Engines & Global RMSE & Cond-Aware RMSE & $\Delta$ RMSE (\%) \\
+\midrule
+10\% & $37.49 \pm 0.79$ & $\mathbf{31.36 \pm 0.85}$ & $\mathbf{-16.3\%}$ \\
+25\% & $35.38 \pm 0.64$ & $\mathbf{30.90 \pm 0.33}$ & $\mathbf{-12.6\%}$ \\
+50\% & $33.24 \pm 1.03$ & $\mathbf{29.05 \pm 0.80}$ & $\mathbf{-12.6\%}$ \\
+100\% & $31.13 \pm 1.15$ & $\mathbf{26.79 \pm 0.68}$ & $\mathbf{-13.9\%}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Remarkably, a condition-aware GRU trained on only $25\%$ of labeled engines achieves a test RMSE of $30.90 \pm 0.33$, matching the performance of a globally normalized GRU trained on $100\%$ of labeled engines ($31.13 \pm 1.15$). Because regime clustering utilizes raw telemetry settings without requiring failure annotations, unsupervised normalization effectively recovers the predictive utility of an additional $75\%$ of labeled failure trajectories.
+
+\subsection{Cluster Count Ablation ($k=1, 3, 6, 9$)}
+Table~\ref{tab:ablation} analyzes cluster granularity on FD004. Coarse clustering with $k=3$ captures major flight phases (e.g., sea level vs. high altitude), reducing RMSE from $31.13$ to $28.79$ (half the total potential gain). Setting $k=6$ matches the true underlying simulation regimes, driving RMSE to $26.79$ ($-13.9\%$).
+
+\begin{table}[t]
+\caption{Cluster Granularity Ablation on FD004 ($100\%$ Labels).}
+\label{tab:ablation}
+\centering
+\begin{tabular}{llcc}
+\toprule
+Clusters ($k$) & Description & Test RMSE & NASA Score \\
+\midrule
+$k=1$ & Global StandardScaler & $31.13 \pm 1.15$ & $9214.6 \pm 1550.8$ \\
+$k=3$ & Coarse Clustering & $28.79 \pm 0.86$ & $7145.3 \pm 878.9$ \\
+$k=6$ & True Physical Regimes & $\mathbf{26.79 \pm 0.68}$ & $\mathbf{4950.5 \pm 403.8}$ \\
+$k=9$ & Over-Clustering & $26.79 \pm 0.68$ & $4963.9 \pm 392.5$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Increasing $k$ to $9$ yields no incremental benefit ($26.79 \pm 0.68$). Cluster centroid analysis reveals that $k=9$ merely fractures three of the six natural clusters into near-identical halves whose cluster centers differ by less than $0.005$ in normalized setting space.
+
+\subsection{Error Distribution by Degradation Stage}
+Fig.~\ref{fig:error_by_bin} partitions test engines into four degradation stages based on true RUL: $0$--$30$, $30$--$60$, $60$--$125$, and $>125$ cycles.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\columnwidth]{figures/error_by_bin.pdf}
+\caption{RMSE broken down by true-RUL degradation bin on FD002 and FD004. Condition-aware normalization provides dramatic error reductions in near-failure regimes ($0$--$30$ and $30$--$60$ cycles).}
+\label{fig:error_by_bin}
+\end{figure}
+
+Condition-aware normalization lowers RMSE across all stages, but improvements are concentrated in critical near-failure cycles:
+\begin{itemize}
+    \item On FD004, RMSE drops by $-7.81$ cycles ($50.7\%$ reduction) in the $0$--$30$ bin ($7.60$ vs. $15.40$) and by $-6.72$ cycles in the $30$--$60$ bin ($16.91$ vs. $23.62$).
+    \item For engines with true RUL $>125$ cycles, RMSE remains elevated ($\approx 44$ to $51$ cycles) for both models. This residual error is an unavoidable consequence of piecewise-linear target clipping at $125$ cycles, which imposes a theoretical ceiling on unclipped early-life predictions.
+\end{itemize}
+
+\subsection{Protocol A vs. Protocol B Discrepancy}
+Table~\ref{tab:protocols} highlights the substantial divergence caused by test-RUL target clipping. When test ground truth is evaluated with a $125$-cycle ceiling (Protocol B), nominal RMSE drops by over $11$ to $12$ cycles on multi-regime sets (FD002 cond: $27.07 \to 14.46$; FD004 cond: $26.79 \to 14.95$). This metric reduction is entirely an artifact of truncating healthy early-life engines and does not reflect improved prognostics. Authors must explicitly document their test protocol when reporting C-MAPSS benchmarks.
+
+\begin{table}[t]
+\caption{Test Protocol Comparison: Standard (Protocol A) vs. Clipped Ground-Truth RUL (Protocol B).}
+\label{tab:protocols}
+\centering
+\begin{tabular}{llcc}
+\toprule
+Subset & Method & Protocol A RMSE & Protocol B RMSE \\
+\midrule
+\multirow{2}{*}{\textbf{FD001}} & GRU Global & $15.94 \pm 0.29$ & $14.66 \pm 0.48$ \\
+ & GRU Cond & $15.94 \pm 0.29$ & $14.66 \pm 0.48$ \\
+\midrule
+\multirow{2}{*}{\textbf{FD002}} & GRU Global & $28.98 \pm 1.23$ & $16.75 \pm 0.16$ \\
+ & GRU Cond & $\mathbf{27.07 \pm 0.63}$ & $\mathbf{14.46 \pm 0.19}$ \\
+\midrule
+\multirow{2}{*}{\textbf{FD003}} & GRU Global & $19.33 \pm 2.89$ & $18.16 \pm 2.74$ \\
+ & GRU Cond & $19.33 \pm 2.89$ & $18.16 \pm 2.74$ \\
+\midrule
+\multirow{2}{*}{\textbf{FD004}} & GRU Global & $31.13 \pm 1.15$ & $19.81 \pm 1.13$ \\
+ & GRU Cond & $\mathbf{26.79 \pm 0.68}$ & $\mathbf{14.95 \pm 0.96}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Omitted Explorations and Literature Comparison}
+\textit{Alternative Architectures and Regime Handling:} In accordance with pre-specified execution rules, comparative runs for alternative architectures (LSTM, 1D-CNN) and alternative regime parameterizations (one-hot encoding, per-regime min-max) were omitted in this experimental iteration due to resource allocation constraints.
+
+\begin{table}[t]
+\caption{Comparison with Published Works [PLACEHOLDER / TODO].}
+\label{tab:literature}
+\centering
+\begin{tabular}{lccc}
+\toprule
+Publication & Normalization & Protocol & FD004 RMSE \\
+\midrule
+Saxena et al.~\cite{saxena2008cmapss} & Global & Protocol A & [TODO: Verify] \\
+STAGNN~\cite{stagnn2024} & Per-Regime & Protocol B & [TODO: Verify] \\
+Gupta~\cite{gupta2024auditing} & Audited & Protocol A & [TODO: Verify] \\
+This Work (GRU) & Per-Regime & Protocol A & $\mathbf{26.79 \pm 0.68}$ \\
+This Work (GRU) & Per-Regime & Protocol B & $\mathbf{14.95 \pm 0.96}$ \\
+\bottomrule
+\end{tabular}
+\begin{flushleft}
+\footnotesize Note: Values in published literature must be verified against primary sources due to divergent clipping protocols and sliding-window stride definitions.
+\end{flushleft}
+\end{table}
+
+\section{Discussion}
+Our empirical findings demonstrate that operating condition normalization is an exceptionally high-leverage intervention in multi-regime turbofan prognostics. In complex multi-regime environments, raw sensor values are predominantly driven by altitude and throttle settings. Failing to isolate operating regimes forces recurrent hidden states to continually reconstruct baseline offsets, obscuring subtle degradation trends. Because regime clustering is entirely unsupervised, condition-aware standardization provides a low-cost, label-free mechanism to dramatically improve model accuracy under severe operational label constraints.
+
+\section{Limitations}
+Several methodological limitations must be highlighted:
+\begin{enumerate}
+    \item \textbf{Finite Seeds ($n=3$):} Primary benchmark runs utilized three random seeds; non-parametric rank tests (e.g., Wilcoxon) have bounded significance under $n=3$, although engine-level paired tests ($N \approx 250$) confirm significance.
+    \item \textbf{FD003 Early Stopping Instability:} On FD003, small holdout validation sets ($20$ engines) caused premature early stopping at epochs 13--15 for seeds 0 and 1, producing high variance ($19.33 \pm 2.89$). No algorithmic conclusions regarding multi-fault interaction should be drawn from FD003 without extended patience schedules.
+    \item \textbf{Discrete Simulated Conditions:} C-MAPSS operating settings cluster into discrete points ($k=6$), which simplifies clustering compared to continuous flight profiles in real-world airline operations.
+    \item \textbf{Single Fixed Test Set:} NASA C-MAPSS provides only a single static test split, preventing nested cross-validation across independent fleets.
+\end{enumerate}
+
+\section{Conclusion}
+This empirical study systematically evaluated per-regime sensor normalization for remaining useful life prediction on NASA C-MAPSS. We confirmed that unsupervised $K$-Means clustering ($k=6$) fit on unlabeled operating settings reduces test RMSE by $-6.6\%$ on FD002 and $-13.9\%$ on FD004, with error reductions concentrated in the critical near-failure stages of engine operation. Under label scarcity, per-regime normalization enables a GRU with only $25\%$ of labeled trajectories to match a globally normalized model using $100\%$ of labels. Finally, we clarified the discrepancy between unclipped and clipped evaluation protocols, providing a reproducible foundation for future prognostic benchmarking.
+
+\section*{Reproducibility Statement}
+All code, dataset cleaning scripts, preprocessing pipelines, training loops, evaluation protocols, and fixed seeds ($0, 1, 2$) are fully documented in the accompanying project repository. Standardized execution scripts allow exact reproduction of all tables and figures without GPU dependencies.
+
+\section*{AI-Assistance Disclosure}
+The authors utilized AI assistance (Google DeepMind Antigravity agentic platform) to assist in scripting benchmark execution, managing background processes, and drafting LaTeX document structure. All experimental procedures, numerical calculations, data audits, and textual claims were directly verified and approved by the human authors.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
