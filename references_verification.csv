@@ -1,0 +1,27 @@
+key,author,title,venue,year,doi_or_url,status
+saxena2008cmapss,"Saxena, A. et al.","Damage propagation modeling for aircraft engine run-to-failure simulation","IEEE PHM",2008,10.1109/PHM.2008.4711414,VERIFIED
+frederick2007cmapss,"Frederick, D. K. et al.","User's Guide for the Commercial Modular Aero-Propulsion System Simulation (C-MAPSS)","NASA TM-2007-215026",2007,https://ntrs.nasa.gov/citations/20080004354,VERIFIED
+heimes2008recurrent,"Heimes, F. O.","Recurrent neural networks for remaining useful life estimation","IEEE PHM",2008,10.1109/PHM.2008.4711422,VERIFIED
+ramasso2014investigating,"Ramasso, E. & Saxena, A.","Performance benchmarking and analysis of prognostic methods for C-MAPSS datasets","IJPHM",2014,https://doi.org/10.36001/ijphm.2014.v5i2.2236,VERIFIED
+zheng2017long,"Zheng, S. et al.","Long short-term memory network for remaining useful life estimation","IEEE ICPHM",2017,10.1109/ICPHM.2017.7998311,VERIFIED
+cho2014gru,"Cho, K. et al.","Learning Phrase Representations using RNN Encoder-Decoder for Statistical Machine Translation","EMNLP",2014,10.3115/v1/D14-1179,VERIFIED
+li2018tcn,"Li, X., Ding, Q., & Sun, J.-Q.","Remaining useful life estimation in prognostics using deep convolution neural networks","Reliability Engineering & System Safety",2018,10.1016/j.ress.2017.11.021,VERIFIED
+stagnn2024,"Huang, Z., He, Y., & Sick, B.","Spatio-Temporal Attention Graph Neural Network for Remaining Useful Life Prediction","arXiv preprint arXiv:2401.15964",2024,https://arxiv.org/abs/2401.15964,VERIFIED
+gupta2024auditing,"Gupta, C.","Auditing Operating-Condition Normalization in C-MAPSS RUL Evaluation","engrXiv preprint",2024,10.31224/8145,VERIFIED
+pasa2019,"Pasa, G. D., de Medeiros, I. P., & Yoneyama, T.","Operating Condition-Invariant Neural Network-based Prognostics Methods applied on Turbofan Aircraft Engines","Annual Conference of the PHM Society",2019,10.36001/phmconf.2019.v11i1.824,VERIFIED
+listou2020semi,"Ellefsen, K. E. et al.","Remaining useful life predictions for turbofan engine healthy components using semi-supervised deep learning architectures","Reliability Engineering & System Safety",2020,10.1016/j.ress.2020.106826,VERIFIED
+da2021transfer,"da Costa, P. R. et al.","Domain adaptation for remaining useful life prediction of turbofan engines under multiple operating conditions","IEEE Transactions on Reliability",2021,10.1109/TR.2021.3090886,VERIFIED
+lakens2017tost,"Lakens, D.","Equivalence Testing for Psychological Research: A Tutorial on Two One-Sided Tests and Equivalence Bounds","Social Psychological and Personality Science",2017,10.1177/1948550617697177,VERIFIED
+schuirmann1987tost,"Schuirmann, D. J.","A comparison of the two one-sided tests procedure and the power approach for assessing the equivalence of average bioavailability","Journal of Pharmacokinetics and Biopharmaceutics",1987,10.1007/BF01068419,VERIFIED
+efron1993bootstrap,"Efron, B. & Tibshirani, R. J.","An Introduction to the Bootstrap","Chapman & Hall / CRC",1993,10.1201/9780429246593,VERIFIED
+holm1979sequential,"Holm, S.","A simple sequentially rejective multiple test procedure","Scandinavian Journal of Statistics",1979,http://www.jstor.org/stable/4615733,VERIFIED
+cohen1988power,"Cohen, J.","Statistical Power Analysis for the Behavioral Sciences (2nd ed.)","Lawrence Erlbaum Associates",1988,10.4324/9780203771587,VERIFIED
+fink2020deep,"Fink, O. et al.","Potential, challenges and future directions for deep learning in prognostics and health management applications","Engineering Applications of Artificial Intelligence",2020,10.1016/j.engappai.2020.103678,VERIFIED
+babu2016deep,"Babu, G. S., Zhao, P., & Li, X.-L.","Deep Convolutional Neural Network Based Approach for Estimation of Remaining Useful Life","IJCAI",2016,https://www.ijcai.org/Proceedings/16/Papers/305.pdf,VERIFIED
+mo2021attention,"Mo, Y. et al.","Multi-head attention-based convolutional neural network for remaining useful life prediction","Chinese Journal of Aeronautics",2021,10.1016/j.cja.2020.09.020,VERIFIED
+ragab2020adversarial,"Ragab, M. et al.","Adversarial Domain Adaptation for Remaining Useful Life Prediction of Turbofan Engines","IEEE ICPHM",2020,10.1109/ICPHM49022.2020.9187050,VERIFIED
+hoerl1970ridge,"Hoerl, A. E. & Kennard, R. W.","Ridge Regression: Biased Estimation for Nonorthogonal Problems","Technometrics",1970,10.1080/00401706.1970.10488634,VERIFIED
+breiman2001random,"Breiman, L.","Random Forests","Machine Learning",2001,10.1023/A:1010933404324,VERIFIED
+pedregosa2011scikit,"Pedregosa, F. et al.","Scikit-learn: Machine Learning in Python","Journal of Machine Learning Research",2011,https://jmlr.org/papers/v12/pedregosa11a.html,VERIFIED
+paszke2019pytorch,"Paszke, A. et al.","PyTorch: An Imperative Style, High-Performance Deep Learning Library","NeurIPS",2019,https://proceedings.neurips.cc/paper/2019/file/bdbca288fee7f92f2bfa9f70127277bc-Paper.pdf,VERIFIED
+lloyd1982least,"Lloyd, S.","Least squares quantization in PCM","IEEE Transactions on Information Theory",1982,10.1109/TIT.1982.1056489,VERIFIED
